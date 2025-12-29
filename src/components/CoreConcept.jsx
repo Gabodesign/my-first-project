@@ -1,3 +1,6 @@
+// Importiamo il file di stile CSS per il componente CoreConcept.
+// Gli stili definiti qui controlleranno l'aspetto del <li>, <h3> e del <p>.
+import './CoreConcept.css'
 // Componente riutilizzabile "CoreConcept".
 // Riceve dei "props" (proprietà) e visualizza un elemento di lista (<li>)
 // con un'immagine, un titolo e una descrizione.

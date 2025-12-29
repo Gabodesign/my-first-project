@@ -6,6 +6,9 @@ import reactLogo from '../assets/react.svg'
 // Importiamo il file SVG del logo di Vite.
 // Anche questo diventerà un URL per l'attributo src dell'immagine.
 import viteLogo from '/vite.svg'
+// Importiamo il file di stile CSS per il componente Header.
+// Gli stili definiti qui controlleranno l'aspetto del <header>.
+import './Header.css'
 
 // Definiamo un componente React chiamato "Header".
 // È una funzione che restituisce del JSX (markup simile a HTML).

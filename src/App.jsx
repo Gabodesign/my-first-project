@@ -6,9 +6,23 @@ import { useState } from 'react'
 // Importiamo il file di stile CSS per questo componente.
 // Gli stili definiti qui verranno applicati agli elementi con le classi corrispondenti.
 import './App.css'
+
+// Importiamo i dati dei concetti fondamentali da un file separato.
+// CORE_CONCEPTS è in genere un array di oggetti (title, description, image, ecc.)
+// che useremo per popolare dinamicamente i componenti CoreConcept.
 import { CORE_CONCEPTS } from './data.js'
+
+// Importiamo il componente Header dal suo file dedicato.
+// Tenere i componenti in file separati rende il codice più organizzato e riutilizzabile.
 import Header from './components/Header.jsx'
+
+// Importiamo il componente CoreConcept dal relativo file.
+// Questo componente rappresenta un singolo "concetto" mostrato nella lista.
 import CoreConcept from './components/CoreConcept.jsx'
+
+// Importiamo il componente TabButton.
+// Lo useremo per visualizzare una serie di pulsanti (tab) nella sezione "Examples".
+import TabButton from './components/TabButton.jsx'
 
 // Array di stringhe che useremo per descrivere React in modo "dinamico".
 // Insieme alla funzione genRandomInt, ci permette di scegliere casualmente
@@ -36,12 +50,18 @@ function App() {
   // genRandomInt(2) restituisce un numero tra 0 e 2, che usiamo come indice dell'array.
   const description = reactDescriptions[genRandomInt(2)];
   // Il componente App restituisce la struttura dell'interfaccia (JSX).
+  function handleSelect(){
+    console.log("Hello World - selected");
+  }
+
   return (
     // React Fragment: <>...</>
     // È un contenitore "invisibile" che ci permette di restituire più elementi
     // senza aggiungere un <div> extra nel DOM.
     <>
       {/* Usiamo il componente Header definito sopra. */}
+      {/* Anche se Header è definito in un altro file (./components/Header.jsx),
+          una volta importato possiamo usarlo qui come qualsiasi altro componente. */}
       <Header />
 
       {/* Titolo principale della pagina. */}
@@ -86,6 +106,9 @@ function App() {
           {/* Ogni CoreConcept è un'istanza del componente riutilizzabile definito sopra.
               Passiamo i dati (title, description, image) come props, così il componente
               può mostrare contenuti diversi mantenendo la stessa struttura. */}
+          {/* I valori che passiamo come props provengono dall'array CORE_CONCEPTS
+              importato da ./data.js. Ogni elemento dell'array è un oggetto con
+              le proprietà title, description e image. */}
           <CoreConcept 
             title={CORE_CONCEPTS[0].title}  
             description={CORE_CONCEPTS[0].description}
@@ -96,10 +119,34 @@ function App() {
             description={CORE_CONCEPTS[1].description}
             image={CORE_CONCEPTS[1].image}
           />
+          {/* In questo caso usiamo l'operatore "spread" {...CORE_CONCEPTS[2]}.
+              Questo prende tutte le proprietà dell'oggetto CORE_CONCEPTS[2]
+              (es. title, description, image) e le passa come singole props
+              al componente CoreConcept. */}
           <CoreConcept {...CORE_CONCEPTS[2]} />
+          {/* Stesso approccio anche per il quarto elemento: tutte le proprietà
+              dell'oggetto CORE_CONCEPTS[3] vengono "spalmate" come props. */}
           <CoreConcept {...CORE_CONCEPTS[3]} />
           
         </ul>
+      </section>
+
+      {/* Sezione che conterrà esempi pratici relativi ai concetti di React. */}
+      <section id="examples">
+        {/* Titolo della sezione degli esempi. */}
+        <h2>Examples</h2>
+        {/* <menu> è simile a una lista; qui lo usiamo per raggruppare
+            i pulsanti che rappresentano le diverse schede (tab). */}
+        <menu>
+          {/* Ogni TabButton è un componente che riceve come contenuto (children)
+              il testo da mostrare sul pulsante. In seguito potrai aggiungere
+              logica per reagire al click e cambiare il contenuto mostrato
+              in base al tab selezionato. */}
+          <TabButton onSelect={handleSelect}>Components</TabButton>
+          <TabButton>JSX</TabButton>
+          <TabButton>Props</TabButton>
+          <TabButton>State</TabButton>
+        </menu>
       </section>
     </>
   )
