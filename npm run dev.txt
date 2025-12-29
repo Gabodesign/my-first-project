@@ -1,0 +1,243 @@
+Ti guido passo per passo.
+0. Cosa avrai alla fine
+
+Alla fine di questi passaggi:
+
+    il tuo progetto React sarà su GitHub
+    apparirà tra i tuoi repository
+    potrai aggiornarlo con un paio di comandi (git add, git commit, git push)
+
+1. Apri il terminale nella cartella del progetto
+
+    Apri il terminale:
+        Windows: “Prompt dei comandi” o “PowerShell”
+        macOS: “Terminale”
+        Linux: il tuo terminale preferito
+
+    Vai nella cartella del tuo progetto React con cd.
+    Esempio (adatta al tuo percorso reale):
+
+Bash
+
+cd /percorso/della/cartella/del/tuo/progetto
+
+Su Windows potrebbe essere qualcosa tipo:
+
+Bash
+
+cd C:\Users\tuo-nome-utente\Desktop\mio-progetto-react
+
+Controlla di essere nella cartella giusta:
+
+    Windows:
+
+Bash
+
+dir
+
+macOS / Linux:
+
+Bash
+
+        ls
+
+    Dovresti vedere file come package.json, src, ecc.
+
+2. Configura Git (solo la prima volta)
+
+Se non l’hai mai fatto, di’ a Git chi sei.
+Nel terminale:
+
+Bash
+
+git config --global user.name "Il Tuo Nome"
+git config --global user.email "la-tua-email@example.com"
+
+Consiglio: usa la stessa email di GitHub, così i commit saranno collegati al tuo profilo.
+3. Crea il file .gitignore (importante per React / Node)
+
+Non vogliamo caricare su GitHub cartelle enormi come node_modules.
+
+    Nella cartella del progetto, crea un file chiamato .gitignore.
+
+    Se sei pratico puoi crearlo dall’editor (VS Code, ecc.).
+    Oppure da terminale (macOS/Linux):
+
+Bash
+
+touch .gitignore
+
+Apri .gitignore e mettici dentro almeno:
+
+txt
+
+    node_modules/
+    dist/
+    .env
+    .DS_Store
+
+    (Se usi Vite, spesso c’è già un .gitignore: controlla che ci sia node_modules/ dentro.)
+
+Salva il file prima di andare avanti.
+4. Inizializza Git nella cartella del progetto
+
+Dentro la cartella del progetto:
+
+Bash
+
+git init
+
+Questo comando dice: “Da ora questa cartella è un repository Git”.
+
+Controlla lo stato:
+
+Bash
+
+git status
+
+Dovresti vedere qualcosa tipo “Untracked files” con l’elenco dei tuoi file (quelli che Git vede ma ancora non sta tracciando).
+5. Aggiungi i file e fai il primo “salvataggio” (commit)
+
+    Aggiungi tutti i file al “prossimo salvataggio”:
+
+Bash
+
+git add .
+
+Il punto (.) significa “tutti i file (tranne quelli in .gitignore)”.
+
+Ora crea il primo commit (una specie di snapshot del progetto):
+
+Bash
+
+    git commit -m "Primo commit: progetto React"
+
+    La parte tra virgolette è il messaggio del commit: scrivi quello che vuoi, l’importante è che sia tra " ".
+
+Se fai di nuovo:
+
+Bash
+
+git status
+
+dovrebbe dirti qualcosa come “nothing to commit, working tree clean”.
+6. Crea il repository su GitHub (vuoto)
+
+    Vai su https://github.com e fai login.
+
+    In alto a destra, clicca sul pulsante + → “New repository”.
+
+    Compila:
+        Repository name: puoi usare lo stesso nome della cartella del progetto, es. mio-progetto-react
+        Description: opzionale
+        Public / Private: scegli tu (se vuoi che sia visibile a tutti, metti Public)
+
+    Molto importante: NON selezionare:
+        “Add a README file”
+        “Add .gitignore”
+        “Add a license”
+
+    (Vogliamo un repository vuoto, perché i file li abbiamo già in locale.)
+
+    Clicca su Create repository.
+
+Ora sei su una pagina che mostra dei comandi tipo:
+
+    …or push an existing repository from the command line
+
+Con sotto qualcosa tipo:
+
+Bash
+
+git remote add origin https://github.com/tuo-username/mio-progetto-react.git
+git branch -M main
+git push -u origin main
+
+7. Collega il tuo progetto locale a GitHub e fai il push
+
+Torna nel terminale, sempre dentro la cartella del progetto.
+
+    Aggiungi il collegamento al repository GitHub (“remote”):
+
+Bash
+
+git remote add origin https://github.com/tuo-username/mio-progetto-react.git
+
+    Sostituisci tuo-username con il tuo nome utente GitHub
+    Sostituisci mio-progetto-react col nome del repository che hai creato
+
+Imposta il nome del branch principale come main (se non lo è già):
+
+Bash
+
+git branch -M main
+
+Manda i file su GitHub:
+
+Bash
+
+    git push -u origin main
+
+La prima volta, potrebbe chiederti di:
+
+    inserire username e password / token
+    oppure
+    aprire il browser per autorizzare Git
+
+Segui le istruzioni che compaiono (se hai problemi, descrivimi cosa vedi e ti aiuto).
+
+Se tutto va bene, alla fine il push va a buon fine.
+8. Controlla su GitHub
+
+    Vai su:
+    https://github.com/tuo-username/mio-progetto-react
+    Ricarica la pagina.
+
+Dovresti vedere:
+
+    tutti i file del tuo progetto
+    l’ultimo commit con il messaggio che hai scritto
+
+9. Fai apparire il progetto sul tuo profilo GitHub
+
+Per mostrarlo in evidenza sul tuo profilo:
+
+    Vai su https://github.com/tuo-username
+    Cerca la sezione “Pinned repositories” o un bottone tipo “Customize your pins”
+    Clicca e aggiungi il repository mio-progetto-react tra quelli “pinnati”
+
+Ora chi visita il tuo profilo lo vede subito.
+10. Come aggiornare il progetto in futuro
+
+Ogni volta che modifichi il codice React:
+
+    Controlla cosa è cambiato:
+
+Bash
+
+git status
+
+Aggiungi le modifiche:
+
+Bash
+
+git add .
+
+Crea un nuovo commit:
+
+Bash
+
+git commit -m "Descrizione delle modifiche"
+
+Manda le modifiche su GitHub:
+
+Bash
+
+    git push
+
+Se vuoi, nel prossimo messaggio puoi:
+
+    incollare il percorso della tua cartella (senza dati sensibili)
+    dirmi se usi Windows, macOS o Linux
+
+e ti scrivo esattamente i comandi adattati al tuo caso specifico (es. con il percorso completo).
