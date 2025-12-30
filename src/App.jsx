@@ -45,9 +45,11 @@ function genRandomInt(max){
 // È il componente che verrà montato nella pagina HTML (di solito in <div id="root">).
 function App() {
   // Stato che memorizza quale "topic" (scheda/tab) è attualmente selezionato
-  // nella sezione "Examples". Il valore iniziale è 'components', quindi
-  // all'avvio mostreremo subito l'esempio relativo ai componenti.
-  const [selectedTopic, setSelectedTopic] = useState('components');
+  // nella sezione "Examples". Qui non passiamo un valore iniziale a useState(),
+  // quindi selectedTopic sarà undefined finché l'utente non clicca un TabButton.
+  // Useremo questo per mostrare un messaggio "Please select a topic" quando
+  // nessun topic è ancora stato scelto.
+  const [selectedTopic, setSelectedTopic] = useState();
 
   // Variabile locale che potrebbe essere usata per definire il contenuto
   // da mostrare in base al tab selezionato. Al momento è inizializzata con
@@ -127,12 +129,27 @@ function App() {
         <h2>Core Concepts</h2>
         {/* Lista non ordinata che conterrà diversi elementi CoreConcept. */}
         <ul>
+
+            {/* Usiamo il metodo .map sull'array CORE_CONCEPTS per trasformare
+                ogni oggetto "conceptItem" in un componente <CoreConcept />.
+                - key={conceptItem.title}: la key aiuta React a identificare
+                  in modo univoco ogni elemento della lista (qui usiamo il titolo).
+                - {...conceptItem}: operatore "spread" che passa tutte le proprietà
+                  dell'oggetto conceptItem (title, description, image, ecc.)
+                  come singole props al componente CoreConcept. */}
+            {CORE_CONCEPTS.map((conceptItem) => (
+              <CoreConcept 
+                key={conceptItem.title} 
+                {...conceptItem}
+              />
+            ))}
+
           {/* Ogni CoreConcept è un'istanza del componente riutilizzabile definito sopra.
               Passiamo i dati (title, description, image) come props, così il componente
               può mostrare contenuti diversi mantenendo la stessa struttura. */}
           {/* I valori che passiamo come props provengono dall'array CORE_CONCEPTS
               importato da ./data.js. Ogni elemento dell'array è un oggetto con
-              le proprietà title, description e image. */}
+              le proprietà title, description e image. 
           <CoreConcept 
             title={CORE_CONCEPTS[0].title}  
             description={CORE_CONCEPTS[0].description}
@@ -143,15 +160,15 @@ function App() {
             description={CORE_CONCEPTS[1].description}
             image={CORE_CONCEPTS[1].image}
           />
-          {/* In questo caso usiamo l'operatore "spread" {...CORE_CONCEPTS[2]}.
+           In questo caso usiamo l'operatore "spread" {...CORE_CONCEPTS[2]}.
               Questo prende tutte le proprietà dell'oggetto CORE_CONCEPTS[2]
               (es. title, description, image) e le passa come singole props
-              al componente CoreConcept. */}
+              al componente CoreConcept.
           <CoreConcept {...CORE_CONCEPTS[2]} />
-          {/* Stesso approccio anche per il quarto elemento: tutte le proprietà
-              dell'oggetto CORE_CONCEPTS[3] vengono "spalmate" come props. */}
+           Stesso approccio anche per il quarto elemento: tutte le proprietà
+              dell'oggetto CORE_CONCEPTS[3] vengono "spalmate" come props. 
           <CoreConcept {...CORE_CONCEPTS[3]} />
-          
+          */}
         </ul>
       </section>
 
@@ -162,20 +179,50 @@ function App() {
         {/* <menu> è simile a una lista; qui lo usiamo per raggruppare
             i pulsanti che rappresentano le diverse schede (tab). */}
         <menu>
-          {/* Ogni TabButton è un componente che riceve come contenuto (children)
-              il testo da mostrare sul pulsante. In seguito potrai aggiungere
-              logica per reagire al click e cambiare il contenuto mostrato
-              in base al tab selezionato. */}
-          <TabButton onSelect={() => handleSelect('components')}>Components</TabButton>
-          <TabButton onSelect={() => handleSelect('jsx')}>JSX</TabButton>
-          <TabButton onSelect={() => handleSelect('props')}>Props</TabButton>
-          <TabButton onSelect={() => handleSelect('state')}>State</TabButton>
+          {/* Ogni TabButton riceve:
+                - children: il testo mostrato sul pulsante (es. "Components")
+                - onSelect: funzione da chiamare quando il bottone viene cliccato
+                - isSelected: booleano che indica se questo tab è quello attivo.
+              Qui confrontiamo selectedTopic con la stringa del tab per ottenere
+              true/false, utile per cambiare stile (es. evidenziare il tab attivo). */}
+          <TabButton 
+            isSelected={selectedTopic === 'components'} 
+            onSelect={() => handleSelect('components')}
+          >
+            Components
+          </TabButton>
+          <TabButton 
+            isSelected={selectedTopic === 'jsx'}
+            onSelect={() => handleSelect('jsx')}
+          >
+            JSX
+          </TabButton>
+          <TabButton
+            isSelected={selectedTopic === 'props'}
+            onSelect={() => handleSelect('props')}
+          >
+            Props
+          </TabButton>
+          <TabButton 
+            isSelected={selectedTopic === 'state'}
+            onSelect={() => handleSelect('state')}
+          >
+            State
+          </TabButton>
         </menu>
 
-        {/* Contenitore che mostra i dettagli relativi al "topic" selezionato.
-            Usiamo selectedTopic come chiave per accedere all'oggetto EXAMPLES
-            corrispondente (es. EXAMPLES['components']). */}
-        <div id="tab-content"> 
+        {/* Render condizionale:
+            - Se selectedTopic è "falsy" (undefined all'inizio), mostriamo
+              un semplice paragrafo che invita a selezionare un topic.
+            - Altrimenti mostriamo il blocco con titolo, descrizione e codice
+              dell'esempio corrispondente. */}
+        {!selectedTopic ? (
+          <p>Please select a topic</p>
+        ) : (
+          /* Contenitore che mostra i dettagli relativi al "topic" selezionato.
+             Usiamo selectedTopic come chiave per accedere all'oggetto EXAMPLES
+             corrispondente (es. EXAMPLES['components']). */
+          <div id="tab-content"> 
             {/* Titolo dell'esempio attualmente selezionato. */}
             <h3>{EXAMPLES[selectedTopic].title}</h3>
             {/* Descrizione testuale dell'esempio corrente. */}
@@ -188,7 +235,10 @@ function App() {
                 {EXAMPLES[selectedTopic].code}
               </code>
             </pre>
-        </div>
+          </div>
+        )}
+        
+        
       </section>
     </>
   )

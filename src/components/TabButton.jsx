@@ -14,12 +14,35 @@ export default function TabButton(props){
     //
     // Esempio d'uso:
     // <TabButton>Components</TabButton>  --> props.children sarà "Components"
-    //function handleClick(){
-        //console.log("Hello World");
-    //}
+    
+    // Variante alternativa (commentata) per gestire il click:
+    // potresti definire una funzione qui dentro e poi usarla nel bottone
+    // come onClick={handleClick}. Nel tuo caso, però, passi direttamente
+    // la funzione dal padre tramite props.onSelect, che è la soluzione migliore.
+    // function handleClick(){
+    //     console.log("Hello World");
+    // }
+
     return (
         <li>
-            <button onClick={props.onSelect}>{props.children}</button>
+            {/* 
+              - className={props.isSelected ? 'active' : undefined}:
+                se props.isSelected è true, aggiungiamo la classe CSS "active"
+                al bottone (es. per evidenziare il tab selezionato).
+                Se è false, passiamo undefined, quindi nessuna classe extra.
+              
+              - onClick={props.onSelect}:
+                quando l'utente clicca il bottone, React chiamerà la funzione
+                passata dal componente padre tramite la prop onSelect.
+                Nel padre (App) questa funzione è un wrapper che chiama handleSelect(...)
+                con il nome del tab.
+            */}
+            <button
+              className={props.isSelected ? 'active' : undefined}
+              onClick={props.onSelect}
+            >
+              {props.children}
+            </button>
         </li>
     );
-} 
+}
