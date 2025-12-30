@@ -1,4 +1,3 @@
-
 // Importiamo l'hook useState dalla libreria React.
 // useState ci permette di creare e gestire uno "stato" dentro un componente.
 import { useState } from 'react'
@@ -11,6 +10,11 @@ import './App.css'
 // CORE_CONCEPTS è in genere un array di oggetti (title, description, image, ecc.)
 // che useremo per popolare dinamicamente i componenti CoreConcept.
 import { CORE_CONCEPTS } from './data.js'
+
+// Importiamo anche gli esempi (EXAMPLES) dallo stesso file dei dati.
+// EXAMPLES è tipicamente un oggetto in cui le chiavi (components, jsx, props, state)
+// corrispondono ai "topic" selezionabili e i valori contengono title, description e code.
+import { EXAMPLES} from './data.js'
 
 // Importiamo il componente Header dal suo file dedicato.
 // Tenere i componenti in file separati rende il codice più organizzato e riutilizzabile.
@@ -40,6 +44,16 @@ function genRandomInt(max){
 // Definiamo il componente principale "App".
 // È il componente che verrà montato nella pagina HTML (di solito in <div id="root">).
 function App() {
+  // Stato che memorizza quale "topic" (scheda/tab) è attualmente selezionato
+  // nella sezione "Examples". Il valore iniziale è 'components', quindi
+  // all'avvio mostreremo subito l'esempio relativo ai componenti.
+  const [selectedTopic, setSelectedTopic] = useState('components');
+
+  // Variabile locale che potrebbe essere usata per definire il contenuto
+  // da mostrare in base al tab selezionato. Al momento è inizializzata con
+  // un messaggio fisso e viene solo loggata in console nella funzione handleSelect.
+  let tabContent = 'Please click a button';
+
   // Creiamo uno stato chiamato "count" con valore iniziale 0.
   // - count: contiene il valore corrente del contatore
   // - setCount: funzione per aggiornare il valore di count
@@ -50,8 +64,18 @@ function App() {
   // genRandomInt(2) restituisce un numero tra 0 e 2, che usiamo come indice dell'array.
   const description = reactDescriptions[genRandomInt(2)];
   // Il componente App restituisce la struttura dell'interfaccia (JSX).
-  function handleSelect(){
-    console.log("Hello World - selected");
+
+  // Funzione gestore che viene chiamata quando si clicca su uno dei TabButton.
+  // selectedButton è una stringa che identifica il tab scelto
+  // (es. 'components', 'jsx', 'props', 'state').
+  function handleSelect(selectedButton){
+    // Aggiorniamo lo stato selectedTopic con il valore del tab selezionato.
+    // Questo causerà un nuovo render del componente e aggiornerà il contenuto
+    // mostrato nella sezione "Examples" in base alla chiave usata in EXAMPLES.
+    setSelectedTopic(selectedButton)
+    // Al momento logghiamo in console il valore di tabContent, che è sempre
+    // "Please click a button" perché non viene mai modificato.
+    console.log(tabContent);
   }
 
   return (
@@ -142,11 +166,29 @@ function App() {
               il testo da mostrare sul pulsante. In seguito potrai aggiungere
               logica per reagire al click e cambiare il contenuto mostrato
               in base al tab selezionato. */}
-          <TabButton onSelect={handleSelect}>Components</TabButton>
-          <TabButton>JSX</TabButton>
-          <TabButton>Props</TabButton>
-          <TabButton>State</TabButton>
+          <TabButton onSelect={() => handleSelect('components')}>Components</TabButton>
+          <TabButton onSelect={() => handleSelect('jsx')}>JSX</TabButton>
+          <TabButton onSelect={() => handleSelect('props')}>Props</TabButton>
+          <TabButton onSelect={() => handleSelect('state')}>State</TabButton>
         </menu>
+
+        {/* Contenitore che mostra i dettagli relativi al "topic" selezionato.
+            Usiamo selectedTopic come chiave per accedere all'oggetto EXAMPLES
+            corrispondente (es. EXAMPLES['components']). */}
+        <div id="tab-content"> 
+            {/* Titolo dell'esempio attualmente selezionato. */}
+            <h3>{EXAMPLES[selectedTopic].title}</h3>
+            {/* Descrizione testuale dell'esempio corrente. */}
+            <p>{EXAMPLES[selectedTopic].description}</p>
+            {/* <pre> e <code> vengono usati insieme per visualizzare blocchi di codice
+                preservando formattazione e andare a capo in modo leggibile. */}
+            <pre>
+              <code>
+                {/* Mostriamo il codice di esempio associato al topic selezionato. */}
+                {EXAMPLES[selectedTopic].code}
+              </code>
+            </pre>
+        </div>
       </section>
     </>
   )
