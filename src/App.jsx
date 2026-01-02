@@ -6,27 +6,15 @@ import { useState } from 'react'
 // Gli stili definiti qui verranno applicati agli elementi con le classi corrispondenti.
 import './App.css'
 
-// Importiamo i dati dei concetti fondamentali da un file separato.
-// CORE_CONCEPTS è in genere un array di oggetti (title, description, image, ecc.)
-// che useremo per popolare dinamicamente i componenti CoreConcept.
-import { CORE_CONCEPTS } from './data.js'
-
-// Importiamo anche gli esempi (EXAMPLES) dallo stesso file dei dati.
-// EXAMPLES è tipicamente un oggetto in cui le chiavi (components, jsx, props, state)
-// corrispondono ai "topic" selezionabili e i valori contengono title, description e code.
-import { EXAMPLES} from './data.js'
-
 // Importiamo il componente Header dal suo file dedicato.
 // Tenere i componenti in file separati rende il codice più organizzato e riutilizzabile.
 import Header from './components/Header.jsx'
 
 // Importiamo il componente CoreConcept dal relativo file.
 // Questo componente rappresenta un singolo "concetto" mostrato nella lista.
-import CoreConcept from './components/CoreConcept.jsx'
+import CoreConcepts from './components/CoreConcepts.jsx'
+import Examples from './components/Examples.jsx'
 
-// Importiamo il componente TabButton.
-// Lo useremo per visualizzare una serie di pulsanti (tab) nella sezione "Examples".
-import TabButton from './components/TabButton.jsx'
 
 // Array di stringhe che useremo per descrivere React in modo "dinamico".
 // Insieme alla funzione genRandomInt, ci permette di scegliere casualmente
@@ -44,17 +32,7 @@ function genRandomInt(max){
 // Definiamo il componente principale "App".
 // È il componente che verrà montato nella pagina HTML (di solito in <div id="root">).
 function App() {
-  // Stato che memorizza quale "topic" (scheda/tab) è attualmente selezionato
-  // nella sezione "Examples". Qui non passiamo un valore iniziale a useState(),
-  // quindi selectedTopic sarà undefined finché l'utente non clicca un TabButton.
-  // Useremo questo per mostrare un messaggio "Please select a topic" quando
-  // nessun topic è ancora stato scelto.
-  const [selectedTopic, setSelectedTopic] = useState();
 
-  // Variabile locale che potrebbe essere usata per definire il contenuto
-  // da mostrare in base al tab selezionato. Al momento è inizializzata con
-  // un messaggio fisso e viene solo loggata in console nella funzione handleSelect.
-  let tabContent = 'Please click a button';
 
   // Creiamo uno stato chiamato "count" con valore iniziale 0.
   // - count: contiene il valore corrente del contatore
@@ -67,18 +45,7 @@ function App() {
   const description = reactDescriptions[genRandomInt(2)];
   // Il componente App restituisce la struttura dell'interfaccia (JSX).
 
-  // Funzione gestore che viene chiamata quando si clicca su uno dei TabButton.
-  // selectedButton è una stringa che identifica il tab scelto
-  // (es. 'components', 'jsx', 'props', 'state').
-  function handleSelect(selectedButton){
-    // Aggiorniamo lo stato selectedTopic con il valore del tab selezionato.
-    // Questo causerà un nuovo render del componente e aggiornerà il contenuto
-    // mostrato nella sezione "Examples" in base alla chiave usata in EXAMPLES.
-    setSelectedTopic(selectedButton)
-    // Al momento logghiamo in console il valore di tabContent, che è sempre
-    // "Please click a button" perché non viene mai modificato.
-    console.log(tabContent);
-  }
+  
 
   return (
     // React Fragment: <>...</>
@@ -124,122 +91,10 @@ function App() {
       </p>
 
       {/* Sezione dedicata ai "concetti fondamentali" (core concepts). */}
-      <section id="core-concepts">
-        {/* Sottotitolo della sezione. */}
-        <h2>Core Concepts</h2>
-        {/* Lista non ordinata che conterrà diversi elementi CoreConcept. */}
-        <ul>
-
-            {/* Usiamo il metodo .map sull'array CORE_CONCEPTS per trasformare
-                ogni oggetto "conceptItem" in un componente <CoreConcept />.
-                - key={conceptItem.title}: la key aiuta React a identificare
-                  in modo univoco ogni elemento della lista (qui usiamo il titolo).
-                - {...conceptItem}: operatore "spread" che passa tutte le proprietà
-                  dell'oggetto conceptItem (title, description, image, ecc.)
-                  come singole props al componente CoreConcept. */}
-            {CORE_CONCEPTS.map((conceptItem) => (
-              <CoreConcept 
-                key={conceptItem.title} 
-                {...conceptItem}
-              />
-            ))}
-
-          {/* Ogni CoreConcept è un'istanza del componente riutilizzabile definito sopra.
-              Passiamo i dati (title, description, image) come props, così il componente
-              può mostrare contenuti diversi mantenendo la stessa struttura. */}
-          {/* I valori che passiamo come props provengono dall'array CORE_CONCEPTS
-              importato da ./data.js. Ogni elemento dell'array è un oggetto con
-              le proprietà title, description e image. 
-          <CoreConcept 
-            title={CORE_CONCEPTS[0].title}  
-            description={CORE_CONCEPTS[0].description}
-            image={CORE_CONCEPTS[0].image}
-          />
-          <CoreConcept 
-            title={CORE_CONCEPTS[1].title} 
-            description={CORE_CONCEPTS[1].description}
-            image={CORE_CONCEPTS[1].image}
-          />
-           In questo caso usiamo l'operatore "spread" {...CORE_CONCEPTS[2]}.
-              Questo prende tutte le proprietà dell'oggetto CORE_CONCEPTS[2]
-              (es. title, description, image) e le passa come singole props
-              al componente CoreConcept.
-          <CoreConcept {...CORE_CONCEPTS[2]} />
-           Stesso approccio anche per il quarto elemento: tutte le proprietà
-              dell'oggetto CORE_CONCEPTS[3] vengono "spalmate" come props. 
-          <CoreConcept {...CORE_CONCEPTS[3]} />
-          */}
-        </ul>
-      </section>
-
+      <CoreConcepts />
+      <Examples />
       {/* Sezione che conterrà esempi pratici relativi ai concetti di React. */}
-      <section id="examples">
-        {/* Titolo della sezione degli esempi. */}
-        <h2>Examples</h2>
-        {/* <menu> è simile a una lista; qui lo usiamo per raggruppare
-            i pulsanti che rappresentano le diverse schede (tab). */}
-        <menu>
-          {/* Ogni TabButton riceve:
-                - children: il testo mostrato sul pulsante (es. "Components")
-                - onSelect: funzione da chiamare quando il bottone viene cliccato
-                - isSelected: booleano che indica se questo tab è quello attivo.
-              Qui confrontiamo selectedTopic con la stringa del tab per ottenere
-              true/false, utile per cambiare stile (es. evidenziare il tab attivo). */}
-          <TabButton 
-            isSelected={selectedTopic === 'components'} 
-            onSelect={() => handleSelect('components')}
-          >
-            Components
-          </TabButton>
-          <TabButton 
-            isSelected={selectedTopic === 'jsx'}
-            onSelect={() => handleSelect('jsx')}
-          >
-            JSX
-          </TabButton>
-          <TabButton
-            isSelected={selectedTopic === 'props'}
-            onSelect={() => handleSelect('props')}
-          >
-            Props
-          </TabButton>
-          <TabButton 
-            isSelected={selectedTopic === 'state'}
-            onSelect={() => handleSelect('state')}
-          >
-            State
-          </TabButton>
-        </menu>
-
-        {/* Render condizionale:
-            - Se selectedTopic è "falsy" (undefined all'inizio), mostriamo
-              un semplice paragrafo che invita a selezionare un topic.
-            - Altrimenti mostriamo il blocco con titolo, descrizione e codice
-              dell'esempio corrispondente. */}
-        {!selectedTopic ? (
-          <p>Please select a topic</p>
-        ) : (
-          /* Contenitore che mostra i dettagli relativi al "topic" selezionato.
-             Usiamo selectedTopic come chiave per accedere all'oggetto EXAMPLES
-             corrispondente (es. EXAMPLES['components']). */
-          <div id="tab-content"> 
-            {/* Titolo dell'esempio attualmente selezionato. */}
-            <h3>{EXAMPLES[selectedTopic].title}</h3>
-            {/* Descrizione testuale dell'esempio corrente. */}
-            <p>{EXAMPLES[selectedTopic].description}</p>
-            {/* <pre> e <code> vengono usati insieme per visualizzare blocchi di codice
-                preservando formattazione e andare a capo in modo leggibile. */}
-            <pre>
-              <code>
-                {/* Mostriamo il codice di esempio associato al topic selezionato. */}
-                {EXAMPLES[selectedTopic].code}
-              </code>
-            </pre>
-          </div>
-        )}
-        
-        
-      </section>
+      
     </>
   )
 }
